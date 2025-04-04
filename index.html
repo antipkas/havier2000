@@ -5,122 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Получи 0.1 MON за подписку на @havier2000!</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-            background-color: #f5f8fa;
-        }
-        .container {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-top: 30px;
-        }
-        h1 {
-            color: #1DA1F2;
-        }
-        button {
-            background: #1DA1F2;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 15px 0;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #1991db;
-        }
-        #status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .success {
-            background: #e1fae1;
-            color: #2e7d32;
-        }
-        .error {
-            background: #ffebee;
-            color: #c62828;
-        }
-        a {
-            color: #1DA1F2;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; background-color: #f5f8fa; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 30px; }
+        h1 { color: #1DA1F2; }
+        button { background: #1DA1F2; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #1991db; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #status { margin: 20px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #e1fae1; color: #2e7d32; }
+        .error { background: #ffebee; color: #c62828; }
+        a { color: #1DA1F2; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎉 Получи 0.1 MON за подписку!</h1>
-        <p>Подпишись на мой Twitter и получи криптовалюту Monad (MON) в подарок!</p>
-        
-        <p><strong>Твой следующий шаг:</strong></p>
-        <ol style="text-align: left; display: inline-block;">
-            <li>Подпишись на <a href="https://twitter.com/havier2000" target="_blank">@havier2000</a></li>
-            <li>Подключи кошелёк ниже</li>
-            <li>Получи 0.1 MON!</li>
-        </ol>
+        <p>Подпишись на <a href="https://twitter.com/havier2000" target="_blank">@havier2000</a> и получи криптовалюту Monad (MON)!</p>
         
         <div style="margin: 25px 0;">
             <button id="connectWallet">🔗 Подключить кошелёк</button>
             <button id="claimReward" disabled>🤑 Получить 0.1 MON</button>
         </div>
         
-        <div id="status">Подключи кошелёк, чтобы начать.</div>
-        
+        <div id="status">Подключите кошелёк MetaMask</div>
         <p><small>Лимит: 200 участников (всего 20 MON)</small></p>
     </div>
 
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <script>
-        const contractAddress = "0x0000000000000000000000000000000000000000";
-        
         document.getElementById('connectWallet').addEventListener('click', async () => {
-            if (window.ethereum) {
-                try {
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    const signer = provider.getSigner();
-                    const address = await signer.getAddress();
-                    
-                    document.getElementById('status').innerHTML = 
-                        `✅ Кошелёк подключен!<br><small>Адрес: ${address.slice(0,6)}...${address.slice(-4)}</small>`;
-                    document.getElementById('status').className = "success";
-                    document.getElementById('claimReward').disabled = false;
-                } catch (err) {
-                    document.getElementById('status').textContent = "❌ Ошибка: " + err.message;
-                    document.getElementById('status').className = "error";
-                }
-            } else {
+            if (!window.ethereum) {
                 document.getElementById('status').innerHTML = 
-                    '❌ Установите <a href="https://metamask.io/" target="_blank">MetaMask</a> для продолжения';
-                document.getElementById('status').className = "error";
+                    '❌ Установите <a href="https://metamask.io/" target="_blank">MetaMask</a>';
+                return;
+            }
+
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                const address = await provider.getSigner().getAddress();
+                
+                document.getElementById('status').innerHTML = 
+                    `✅ Кошелёк подключен!<br><small>${address.slice(0,6)}...${address.slice(-4)}</small>`;
+                document.getElementById('claimReward').disabled = false;
+            } catch (err) {
+                document.getElementById('status').textContent = "❌ Ошибка: " + err.message;
             }
         });
 
         document.getElementById('claimReward').addEventListener('click', async () => {
             const status = document.getElementById('status');
-            status.textContent = "⌛ Проверяем подписку на @havier2000...";
-            status.className = "";
+            status.innerHTML = "⌛ Проверяем подписку...";
             
             setTimeout(() => {
                 status.innerHTML = `
                     ✅ Подписка подтверждена!<br>
-                    <small>Когда сеть Monad запустится, вы получите 0.1 MON!</small>
+                    <small>Токены будут отправлены после запуска Monad</small>
                 `;
-                status.className = "success";
-            }, 2000);
+            }, 1500);
         });
     </script>
 </body>
