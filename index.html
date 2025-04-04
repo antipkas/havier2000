@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!DOCTYPE html>
-<html lang="ru">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Получи 0.1 MON за подписку на @havier2000!</title>
@@ -85,13 +82,10 @@
         <p><small>Лимит: 200 участников (всего 20 MON)</small></p>
     </div>
 
-    <!-- Подключаем библиотеку для работы с блокчейном -->
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <script>
-        // Здесь будет адрес вашего контракта (пока заглушка)
         const contractAddress = "0x0000000000000000000000000000000000000000";
         
-        // Подключение кошелька
         document.getElementById('connectWallet').addEventListener('click', async () => {
             if (window.ethereum) {
                 try {
@@ -115,7 +109,6 @@
             }
         });
 
-        // Получение MON (заглушка - реальная проверка появится с контрактом)
         document.getElementById('claimReward').addEventListener('click', async () => {
             const status = document.getElementById('status');
             status.textContent = "⌛ Проверяем подписку на @havier2000...";
@@ -131,6 +124,4 @@
         });
     </script>
 </body>
-</html>
-    ...
 </html>
